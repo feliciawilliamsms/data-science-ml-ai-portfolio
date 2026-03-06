@@ -1,0 +1,65 @@
+# Extraction parameters
+data:
+  start_date: "2025-01-01"
+  end_date: "2026-01-01"
+  sample_size: 500000        # set to integer for quick testing
+
+# Claim filtering
+claims:
+  valid_status:
+    - FINAL
+    - PAID
+  dedupe_key: "claim_id"
+  dedupe_strategy: "latest_update"
+
+# Accounting filtering
+accounting:
+  payment_codes:
+    - PSAV
+    - PS
+  allowed_sources:
+    - PAYMENT_LEDGER
+    - ACCOUNTING_POST
+
+# Join configuration
+join:
+  primary_key: "claim_id"
+  join_type: "left"
+  max_accounting_records_per_claim: 10
+
+# Feature engineering
+features:
+  create_temporal_features: true
+  include_claim_amounts: true
+  include_accounting_amounts: true
+  include_join_flags: true
+
+# Model configuration
+model:
+  target_column: "psav_payment_flag"
+  test_size: 0.2
+  random_state: 42
+
+  logistic_regression:
+    penalty: "l2"
+    C: 1.0
+    max_iter: 1000
+
+  xgboost:
+    n_estimators: 200
+    learning_rate: 0.05
+    max_depth: 6
+    subsample: 0.8
+    colsample_bytree: 0.8
+
+  lightgbm:
+    n_estimators: 200
+    learning_rate: 0.05
+    num_leaves: 31
+    max_depth: -1
+
+# Output locations
+paths:
+  staging: "data/staging"
+  models: "artifacts/models"
+  reports: "artifacts/reports"
