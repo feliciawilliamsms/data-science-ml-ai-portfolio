@@ -44,21 +44,32 @@ psav-payment-poc/
 ├── .env.example
 ├── configs/
 │   └── default.yaml
+│
 ├── data/
 │   ├── raw/
 │   └── staging/
+│
 ├── notebooks/
+│   ├── 01_eda_psav_claim_payment.ipynb
+│   └── 02_model_evaluation.ipynb
+│
 ├── src/
 │   ├── __init__.py
 │   ├── config.py
 │   ├── db_fetch.py
 │   ├── etl.py
-│   ├── features.py
-│   ├── train.py
-│   └── evaluate.py
+│   ├── data_cleaning.py
+│   ├── feature_engineering.py
+│   ├── modeling.py
+│   └── model_comparison.py
+│
+├── reports/
+│   ├── eda_summary.md
+│   └── modeling_summary.md
+│
 └── artifacts/
-    ├── models/
-    └── reports/
+    ├── figures/
+    └── models/
 ```
 
 ---
