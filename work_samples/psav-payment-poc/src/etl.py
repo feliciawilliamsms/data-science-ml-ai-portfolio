@@ -15,6 +15,7 @@ data_cfg = cfg["data"]
 
 start_date = data_cfg["start_date"]
 end_date = data_cfg["end_date"]
+sample_size = int(data_cfg["sample_size"])
 
 # often we use end_date as the as_of_date for reproducibility
 as_of_date = end_date
@@ -27,6 +28,7 @@ def extract_psav_model(
     start_date: str,
     end_date: str,
     as_of_date: str,
+    sample_size: int,
     fee_type: str = "PS",
     bill_method: str = "PSAV",
 ) -> pd.DataFrame:
@@ -222,10 +224,22 @@ def extract_psav_model(
             FROM CLAIMS c
             JOIN ACCOUNTING_CLAIM_LEVEL a
                 ON a.CLAIMNUMBER_A = c.CLAIMNUMBER_C
+        ),
+
+        SAMPLED AS (
+            SELECT
+                fm.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fm.paid_flag
+                    ORDER BY DBMS_RANDOM.VALUE
+                ) AS sample_rn
+            FROM FINAL_MODEL fm
+            WHERE fm.paid_flag IN (0, 1)
         )
 
         SELECT *
-        FROM FINAL_MODEL
+        FROM SAMPLED
+        WHERE sample_rn <= :sample_size
         """
     )
 
@@ -239,6 +253,7 @@ def extract_psav_model(
                 "start_date": start_date,
                 "end_date": end_date,
                 "as_of_date": as_of_date,
+                "sample_size": sample_size,
             },
         )
 
@@ -252,24 +267,20 @@ def save_model_dataset(df: pd.DataFrame, start_date: str, end_date: str) -> Path
 
 
 def run_etl() -> None:
-    data_cfg = cfg["data"]
-
-    start_date = data_cfg["start_date"]
-    end_date = data_cfg["end_date"]
-    as_of_date = end_date
-
     df_model = extract_psav_model(
         start_date=start_date,
         end_date=end_date,
         as_of_date=as_of_date,
-        fee_type="PS",
-        bill_method="PSAV",
+        sample_size=sample_size,
+        fee_type=fee_type,
+        bill_method=bill_method,
     )
 
     out_path = save_model_dataset(df_model, start_date, end_date)
 
     print("Saved:", out_path)
     print("Shape:", df_model.shape)
+    print(f"\nSample size requested per class: {sample_size}")
     print("\npaid_flag distribution:")
     print(df_model["paid_flag"].value_counts(dropna=False))
 
