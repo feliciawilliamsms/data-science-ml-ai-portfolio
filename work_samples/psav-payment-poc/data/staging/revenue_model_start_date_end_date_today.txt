@@ -1,0 +1,1 @@
+This is where the parquet file will be pushed from the etl script. 
