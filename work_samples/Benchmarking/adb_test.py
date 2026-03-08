@@ -4,16 +4,16 @@
 # import oracledb
 
 # # Fill these in
-# USER = "COREAI_USER"          # or ADMIN, etc.
-# PWD  = "ChangeMe#today1"
+# USER = "USER"          # or ADMIN, etc.
+# PWD  = "Password"
 # # WALLET_DIR = r"""C:/Users/Felicia.williams/Downloads/wallet"""
 
 # # Direct connection descriptor (TNS string)
 # DSN = (
 #     "(description="
 #     "(retry_count=20)(retry_delay=3)"
-#     "(address=(protocol=tcps)(port=1522)(host=ykc6u08c.adb.us-phoenix-1.oraclecloud.com))"
-#     "(connect_data=(service_name=g5131843e34dc90_adbcoreai_high.adb.oraclecloud.com))"
+#     "(address=(protocol=tcps)(port=1522)(host=))"
+#     "(connect_data=(service_name=))"
 #     "(security=(ssl_server_dn_match=no)))"
 # )
 # # If your client bin isn't on PATH, add lib_dir:
@@ -43,15 +43,15 @@ import oracledb
 from tqdm import tqdm
 
 # Fill these in
-USER = "COREAI_USER"
-PWD = "ChangeMe#today1"
+USER = "USER"
+PWD = "Password"
 
 # Direct connection descriptor (TNS string)
 DSN = (
     "(description="
     "(retry_count=20)(retry_delay=3)"
-    "(address=(protocol=tcps)(port=1522)(host=ykc6u08c.adb.us-phoenix-1.oraclecloud.com))"
-    "(connect_data=(service_name=g5131843e34dc90_adbcoreai_high.adb.oraclecloud.com))"
+    "(address=(protocol=tcps)(port=1522)(host=))"
+    "(connect_data=(service_name=))"
     "(security=(ssl_server_dn_match=no)))"
 )
 
